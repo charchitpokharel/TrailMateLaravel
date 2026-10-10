@@ -1,0 +1,6 @@
+@extends('layouts.app', ['title' => 'Explore the outdoors'])
+@section('content')
+<section class="hero mb-4"><span class="badge text-bg-light mb-3">Your outdoor companion</span><h1 class="display-5 fw-bold">Find your next trail.</h1><p class="lead">Explore routes, check conditions and plan your next outdoor adventure.</p><a class="btn btn-light btn-lg" href="{{ route('trails.index') }}">Explore trails</a> <a class="btn btn-outline-light btn-lg" href="{{ route('weather') }}">Check weather</a></section>
+<div class="d-flex justify-content-between align-items-center mb-3"><h2 class="h4 mb-0">Recently added trails</h2><a href="{{ route('trails.index') }}">View all</a></div>
+<div class="row g-3">@forelse($trails as $trail)<div class="col-md-4"><div class="card h-100"><div class="card-body"><span class="badge text-bg-success">{{ $trail->difficulty }}</span><h3 class="h5 mt-2">{{ $trail->name }}</h3><p class="muted mb-2">{{ $trail->location }} · {{ $trail->distance_km }} km</p><p>{{ \Illuminate\Support\Str::limit($trail->description, 120) }}</p><a class="btn btn-forest" href="{{ route('trails.show', $trail) }}">View trail</a></div></div></div>@empty<p class="muted">No trails added yet. Add your first trail from Explore.</p>@endforelse</div>
+@endsection
