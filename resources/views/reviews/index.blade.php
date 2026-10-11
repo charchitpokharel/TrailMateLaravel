@@ -1,4 +1,4 @@
-@extends('layouts.app', ['title' => 'Trail reviews'])
+@extends('layouts.trailmate', ['title' => 'Trail reviews'])
 @section('content')
 <h1 class="h2">Trail reviews: {{ $trail->name }}</h1><form id="reviewForm" class="card card-body gap-2">
 @csrf<input type="hidden" name="trail_id" value="{{ $trail->id }}">

@@ -1,4 +1,4 @@
-@extends('layouts.app', ['title' => 'Explore trails'])
+@extends('layouts.TrailMate', ['title' => 'Explore trails'])
 @section('content')
 <div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-3"><div><h1 class="h2">Explore trails</h1><p class="muted">Search routes stored in the TrailMate database.</p></div><a class="btn btn-forest" href="{{ route('trails.create') }}">Add trail</a></div>
 <input id="trailSearch" class="form-control form-control-lg mb-3" placeholder="Search by trail, location or difficulty…" autocomplete="off">

@@ -1,4 +1,4 @@
-@extends('layouts.app', ['title' => $trail ? 'Edit trail' : 'Add a trail'])
+@extends('layouts.trailmate', ['title' => $trail ? 'Edit trail' : 'Add a trail'])
 @section('content')
 <h1 class="h2 mb-3">{{ $trail ? 'Edit trail' : 'Add a trail' }}</h1>
 <form method="post" action="{{ $trail ? route('trails.update', $trail) : route('trails.store') }}" class="card card-body gap-3">

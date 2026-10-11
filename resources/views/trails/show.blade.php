@@ -1,4 +1,4 @@
-@extends('layouts.app', ['title' => $trail->name])
+@extends('layouts.trailmate', ['title' => $trail->name])
 @section('content')
 <div class="card"><div class="card-body p-4"><span class="badge text-bg-success">{{ $trail->difficulty }}</span><h1 class="mt-2">{{ $trail->name }}</h1><p class="muted">{{ $trail->location }} · {{ $trail->distance_km }} km</p><p>{!! nl2br(e($trail->description)) !!}</p><div class="d-flex flex-wrap gap-2">
 <a class="btn btn-outline-secondary" href="{{ route('trails.edit', $trail) }}">Edit</a>
