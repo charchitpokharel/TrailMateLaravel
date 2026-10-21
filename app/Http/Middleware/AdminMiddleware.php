@@ -1,4 +1,3 @@
-
 <?php
 
 namespace App\Http\Middleware;
@@ -11,9 +10,9 @@ class AdminMiddleware
 {
     public function handle(Request $request, Closure $next): Response
     {
-        if (! $request->user() || $request->user()->role !== 'admin') {
-            abort(403, 'Access denied.');
-        }
+        $user = $request->user();
+        abort_unless($user, 401);
+        abort_unless(isset($user->role) && $user->role === 'admin', 403, 'Administrator access is required.');
 
         return $next($request);
     }

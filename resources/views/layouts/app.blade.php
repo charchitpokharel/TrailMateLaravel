@@ -1,36 +1,36 @@
-<!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
-    <head>
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <meta name="csrf-token" content="{{ csrf_token() }}">
-
-        <title>{{ config('app.name', 'Laravel') }}</title>
-
-        <!-- Fonts -->
-        <link rel="preconnect" href="https://fonts.bunny.net">
-        <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
-
-        <!-- Scripts -->
-        @vite(['resources/css/app.css', 'resources/js/app.js'])
-    </head>
-    <body class="font-sans antialiased">
-        <div class="min-h-screen bg-gray-100">
-            @include('layouts.navigation')
-
-            <!-- Page Heading -->
-            @isset($header)
-                <header class="bg-white shadow">
-                    <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
-                        {{ $header }}
-                    </div>
-                </header>
-            @endisset
-
-            <!-- Page Content -->
-            <main>
-                {{ $slot }}
-            </main>
-        </div>
-    </body>
-</html>
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="csrf-token" content="{{ csrf_token() }}">
+<meta name="description" content="Explore hiking trails, save favourites, read reviews and check local weather with TrailMate.">
+<title>{{ $title ?? 'TrailMate' }}</title>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+<link href="{{ asset('css/trailmate.css') }}" rel="stylesheet">
+</head><body>
+<nav class="navbar navbar-expand-lg navbar-dark"><div class="container">
+<a class="navbar-brand fw-bold" href="{{ route('home') }}">🌿 TrailMate</a>
+<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#nav" aria-controls="nav" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
+<div class="collapse navbar-collapse" id="nav"><div class="navbar-nav ms-auto align-items-lg-center">
+<a class="nav-link" href="{{ route('trails.index') }}">Explore trails</a><a class="nav-link" href="{{ route('weather') }}">Weather</a><a class="nav-link" href="{{ route('favourites') }}">Favourites</a>
+@auth
+@if((Auth::user()->role ?? 'user') === 'admin')<a class="nav-link fw-semibold" href="{{ route('admin.dashboard') }}">Admin dashboard</a>@endif
+<a class="nav-link" href="{{ route('trails.create') }}">+ Add trail</a>
+<span class="navbar-text text-white-50 px-lg-2">{{ Auth::user()->name }}</span>
+<form method="POST" action="{{ route('logout') }}" class="d-inline">@csrf<button class="btn btn-sm btn-outline-light ms-lg-2 my-2 my-lg-0" type="submit">Log out</button></form>
+@else
+<a class="nav-link" href="{{ route('login') }}">Log in</a>
+<a class="btn btn-sm btn-light ms-lg-2 my-2 my-lg-0" href="{{ route('register') }}">Sign up</a>
+@endauth
+</div></div></div></nav>
+<main class="container py-4">
+<div data-global-message hidden role="status" aria-live="polite"></div>
+@if(session('success'))<div class="alert alert-success">{{ session('success') }}</div>@endif
+@if(session('error'))<div class="alert alert-danger">{{ session('error') }}</div>@endif
+@if($errors->any())<div class="alert alert-danger"><ul class="mb-0">@foreach($errors->all() as $error)<li>{{ $error }}</li>@endforeach</ul></div>@endif
+@yield('content')
+</main><footer class="container py-4 text-center muted small">TrailMate · Plan thoughtfully, explore responsibly</footer>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="{{ asset('js/trailmate.js') }}" defer></script>
+@stack('scripts')
+</body></html>

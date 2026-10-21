@@ -1,0 +1,7 @@
+@extends('layouts.app', ['title' => 'Trail management · TrailMate'])
+@section('content')
+<div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-3"><div><h1 class="h2">Manage all trails</h1><p class="text-secondary">Admins can edit or delete any trail. Deletion may also remove associated reviews.</p></div><a class="btn btn-outline-secondary" href="{{ route('admin.dashboard') }}">Back to dashboard</a></div>
+<div class="card shadow-sm"><div class="table-responsive"><table class="table table-hover align-middle mb-0"><thead><tr><th>Trail</th><th>Location</th><th>Difficulty</th><th>Owner</th><th>Actions</th></tr></thead><tbody>
+@forelse($trails as $trail)<tr><td><a href="{{ route('trails.show',$trail) }}">{{ $trail->name }}</a></td><td>{{ $trail->location }}</td><td>{{ $trail->difficulty }}</td><td>{{ $trail->user?->name ?? 'Legacy / unknown' }}</td><td><div class="d-flex gap-2"><a class="btn btn-sm btn-outline-primary" href="{{ route('trails.edit',$trail) }}">Edit</a><form method="POST" action="{{ route('trails.destroy',$trail) }}" onsubmit="return confirm('Delete this trail and its related reviews?')">@csrf @method('DELETE')<button class="btn btn-sm btn-outline-danger">Delete</button></form></div></td></tr>@empty<tr><td colspan="5" class="p-3">No trails found.</td></tr>@endforelse
+</tbody></table></div><div class="card-body">{{ $trails->links() }}</div></div>
+@endsection

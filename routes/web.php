@@ -1,92 +1,55 @@
-
 <?php
 
-use App\Http\Controllers\FavouriteController;
-use App\Http\Controllers\HomeController;
-use App\Http\Controllers\ProfileController;
-use App\Http\Controllers\ReviewController;
-use App\Http\Controllers\TrailController;
-use App\Http\Controllers\WeatherController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\HomeController;
+use App\Http\Controllers\TrailController;
+use App\Http\Controllers\FavouriteController;
+use App\Http\Controllers\ReviewController;
+use App\Http\Controllers\WeatherController;
+use App\Http\Controllers\Admin\AdminDashboardController;
+use App\Http\Middleware\AdminMiddleware;
 
-// Home page
-Route::get('/', [HomeController::class, 'index'])
-    ->name('home');
+Route::get('/', [HomeController::class, 'index'])->name('home');
 
-// Weather page
-Route::get('/weather', [WeatherController::class, 'index'])
-    ->name('weather.index');
+// Laravel Breeze redirects to the named dashboard route after login/registration.
+// Administrators go to /admin; ordinary users go to the public home page.
+Route::get('/dashboard', function () {
+    return auth()->user()?->role === 'admin'
+        ? redirect()->route('admin.dashboard')
+        : redirect()->route('home');
+})->middleware('auth')->name('dashboard');
 
-// Weather forecast endpoint
-Route::get('/api/weather', [WeatherController::class, 'forecast'])
-    ->middleware('throttle:30,1')
-    ->name('api.weather');
-
-// Live trail search
-Route::get('/api/trails/search', [TrailController::class, 'search'])
-    ->middleware('throttle:60,1')
-    ->name('api.trails.search');
-
-// Admin-only features
-Route::middleware(['auth', 'admin'])->group(function () {
-    Route::get('/admin', function () {
-        return view('admin.dashboard');
-    })->name('admin.dashboard');
-
-    Route::get('/trails/create', [TrailController::class, 'create'])
-        ->name('trails.create');
-
-    Route::post('/trails', [TrailController::class, 'store'])
-        ->name('trails.store');
-
-    Route::get('/trails/{trail}/edit', [TrailController::class, 'edit'])
-        ->name('trails.edit');
-
-    Route::put('/trails/{trail}', [TrailController::class, 'update'])
-        ->name('trails.update');
-
-    Route::delete('/trails/{trail}', [TrailController::class, 'destroy'])
-        ->name('trails.destroy');
+// Admin-only pages are protected server-side by authentication and role middleware.
+Route::middleware(['auth', AdminMiddleware::class])->prefix('admin')->name('admin.')->group(function () {
+    Route::get('/', [AdminDashboardController::class, 'index'])->name('dashboard');
+    Route::get('/users', [AdminDashboardController::class, 'users'])->name('users');
+    Route::get('/trails', [AdminDashboardController::class, 'trails'])->name('trails');
+    Route::get('/reviews', [AdminDashboardController::class, 'reviews'])->name('reviews');
+    Route::delete('/reviews/{review}', [AdminDashboardController::class, 'destroyReview'])->name('reviews.destroy');
 });
 
-// Public trail browsing
-Route::get('/trails', [TrailController::class, 'index'])
-    ->name('trails.index');
+// Public browsing; management actions require an authenticated account.
+Route::get('/trails', [TrailController::class, 'index'])->name('trails.index');
+Route::get('/trails/create', [TrailController::class, 'create'])->middleware('auth')->name('trails.create');
+Route::post('/trails', [TrailController::class, 'store'])->middleware('auth')->name('trails.store');
+Route::get('/trails/{trail}', [TrailController::class, 'show'])->whereNumber('trail')->name('trails.show');
+Route::get('/trails/{trail}/edit', [TrailController::class, 'edit'])->middleware('auth')->whereNumber('trail')->name('trails.edit');
+Route::put('/trails/{trail}', [TrailController::class, 'update'])->middleware('auth')->whereNumber('trail')->name('trails.update');
+Route::patch('/trails/{trail}', [TrailController::class, 'update'])->middleware('auth')->whereNumber('trail')->name('trails.update.patch');
+Route::delete('/trails/{trail}', [TrailController::class, 'destroy'])->middleware('auth')->whereNumber('trail')->name('trails.destroy');
 
-Route::get('/trails/{trail}', [TrailController::class, 'show'])
-    ->whereNumber('trail')
-    ->name('trails.show');
+Route::get('/api/trails/search', [TrailController::class, 'search'])->name('api.trails.search');
 
-// Authenticated user features
-Route::middleware('auth')->group(function () {
-    Route::get('/dashboard', function () {
-        return view('dashboard');
-    })->middleware('verified')->name('dashboard');
+Route::get('/weather', [WeatherController::class, 'index'])->name('weather');
+Route::get('/api/weather', [WeatherController::class, 'forecast'])->name('api.weather');
 
-    // User profile
-    Route::get('/profile', [ProfileController::class, 'edit'])
-        ->name('profile.edit');
+Route::get('/favourites', [FavouriteController::class, 'index'])->name('favourites');
+Route::post('/api/favourites/{trail}', [FavouriteController::class, 'toggle'])->name('api.favourites.toggle');
 
-    Route::patch('/profile', [ProfileController::class, 'update'])
-        ->name('profile.update');
+Route::get('/reviews/{trail}', [ReviewController::class, 'index'])->name('reviews.index');
+Route::post('/api/reviews/{trail}', [ReviewController::class, 'store'])->name('api.reviews.store');
 
-    Route::delete('/profile', [ProfileController::class, 'destroy'])
-        ->name('profile.destroy');
-
-    // Favourites
-    Route::get('/favourites', [FavouriteController::class, 'index'])
-        ->name('favourites.index');
-
-    Route::post('/favourites/{trail}', [FavouriteController::class, 'store'])
-        ->name('favourites.store');
-
-    Route::delete('/favourites/{trail}', [FavouriteController::class, 'destroy'])
-        ->name('favourites.destroy');
-
-    // Reviews
-    Route::post('/trails/{trail}/reviews', [ReviewController::class, 'store'])
-        ->name('reviews.store');
-});
-
-// Authentication routes
-require __DIR__.'/auth.php';
+// Laravel Breeze authentication routes (login, registration, password reset, logout).
+if (file_exists(__DIR__.'/auth.php')) {
+    require __DIR__.'/auth.php';
+}
