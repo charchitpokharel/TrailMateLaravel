@@ -17,7 +17,7 @@ FEATURES INCLUDED
 - AJAX reviews: submit and refresh the review list without reloading the page.
 - Weather lookup through Open-Meteo using browser geolocation.
 - CSRF-aware same-origin requests and escaped output for AJAX-rendered text.
-- Existing API-style endpoints/named routes are retained.
+- Existing API-style endpoints/named routes are retained
 
 IMPORTANT LIMITATIONS
 ---------------------
