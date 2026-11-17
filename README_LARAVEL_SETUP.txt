@@ -3,7 +3,7 @@ TRAILMATE LARAVEL — PROFESSIONAL MVC + AJAX + ADMIN OVERLAY
 
 WHAT THIS PACKAGE IS
 --------------------
-This ZIP contains the TrailMate application files to merge into the Laravel 12 project you already created. It is not a fresh Laravel framework installation and does not include vendor/, .env, or generated framework dependencies. Keep your existing Laravel skeleton and merge these files into it.
+This contains the TrailMate application files to merge into the Laravel 12 project you already created. It is not a fresh Laravel framework installation and does not include vendor/, .env, or generated framework dependencies. Keep your existing Laravel skeleton and merge these files into it.
 
 FEATURES INCLUDED
 -----------------
