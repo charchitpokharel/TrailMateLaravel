@@ -13,7 +13,7 @@ FEATURES INCLUDED
 - AJAX trail search, difficulty filtering, pagination and result counts (no full
   page reload while searching/filtering/paging).
 - AJAX trail create/update with inline server-side validation errors.
-- AJAX delete and session-based favourite toggling.
+- AJAX delete and session-based favourite toggling
 - AJAX reviews: submit and refresh the review list without reloading the page.
 - Weather lookup through Open-Meteo using browser geolocation.
 - CSRF-aware same-origin requests and escaped output for AJAX-rendered text
