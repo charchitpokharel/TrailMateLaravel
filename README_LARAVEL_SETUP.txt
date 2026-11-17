@@ -22,7 +22,7 @@ FEATURES INCLUDED
 IMPORTANT LIMITATIONS
 ---------------------
 - Authentication uses Laravel Breeze routes already installed in your project. Admin routes are protected by AdminMiddleware; ordinary users may manage only trails they own. Verify these controls locally before deployment.
-- Favourites are browser-session based, not persisted to user accounts.
+- Favourites are browser-session based, not persisted to user accounts
 - Weather requires internet access and geolocation permission; browsers generally
   require localhost or HTTPS for location.
 - This overlay has not been executed against your local database/PHP setup. Do
