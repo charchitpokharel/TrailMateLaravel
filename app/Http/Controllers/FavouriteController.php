@@ -10,6 +10,13 @@ class FavouriteController extends Controller
     {
         $ids = session()->get('favourites', []);
         $trails = empty($ids) ? collect() : Trail::whereIn('id', $ids)->get();
+        // Remove favourites whose trails no longer exist.
+        $existingIds = array_values(array_intersect($ids, $trails->pluck('id')->all()));
+
+        if ($ids !== $existingIds) {
+            session()->put('favourites', $existingIds);
+        }
+
         return view('favourites', compact('trails'));
     }
 
