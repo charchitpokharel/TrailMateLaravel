@@ -105,6 +105,7 @@
 
     let timer = null;
     let currentPage = 1;
+    let latestRequest = 0;
 
     // Escape HTML to prevent unsafe content being inserted into the page.
     function esc(value) {
@@ -195,6 +196,7 @@
     }
 
     async function load(page = 1) {
+        const requestNumber = ++latestRequest;
         currentPage = page;
         results.classList.add('loading');
 
@@ -220,6 +222,13 @@
             }
 
             const data = await response.json();
+
+            // Ignore outdated AJAX responses.
+            if (requestNumber !== latestRequest ||
+                params.get('q') !== input.value.trim() ||
+                params.get('difficulty') !== filter.value) {
+                return;
+            }
 
             render(data.data || []);
 
@@ -252,6 +261,11 @@
             }
 
         } catch (error) {
+            if (requestNumber !== latestRequest ||
+                params.get('q') !== input.value.trim() ||
+                params.get('difficulty') !== filter.value) {
+                return;
+            }
             console.error(error);
 
             results.innerHTML = `
@@ -262,7 +276,9 @@
                 </div>
             `;
         } finally {
-            results.classList.remove('loading');
+            if (requestNumber === latestRequest) {
+                results.classList.remove('loading');
+            }
         }
     }
 
