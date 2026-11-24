@@ -17,10 +17,6 @@ return new class extends Migration
 
     public function down(): void
     {
-        if (Schema::hasColumn('users', 'role')) {
-            Schema::table('users', function (Blueprint $table) {
-                $table->dropColumn('role');
-            });
-        }
+        // Role is created by the original users table migration.
     }
 };

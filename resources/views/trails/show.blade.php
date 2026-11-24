@@ -7,7 +7,7 @@
 <button type="button" class="btn btn-outline-danger" data-ajax-delete data-url="{{ route('trails.destroy', $trail) }}" data-confirm="Delete this trail and its reviews?">Delete trail</button>
 @endif
 @endauth
-<button id="fav" class="btn btn-forest" type="button" data-url="{{ route('api.favourites.toggle',$trail) }}">♡ Save favourite</button><a class="btn btn-outline-secondary" href="{{ route('reviews.index', $trail) }}">View reviews</a></div><div id="notice" class="small mt-2" aria-live="polite"></div></div></div>
+<button id="fav" class="btn btn-forest" type="button" data-url="{{ route('api.favourites.toggle',$trail) }}">{{ in_array($trail->id, session('favourites', [])) ? '♥ Saved favourite' : '♡ Save favourite' }}</button><a class="btn btn-outline-secondary" href="{{ route('reviews.index', $trail) }}">View reviews</a></div><div id="notice" class="small mt-2" aria-live="polite"></div></div></div>
 @endsection
 @push('scripts')
 <script>
