@@ -49,6 +49,11 @@ Route::post('/api/favourites/{trail}', [FavouriteController::class, 'toggle'])->
 Route::get('/reviews/{trail}', [ReviewController::class, 'index'])->name('reviews.index');
 Route::post('/api/reviews/{trail}', [ReviewController::class, 'store'])->middleware('throttle:5,1')->name('api.reviews.store');
 
+Route::middleware('auth')->group(function () {
+    Route::get('/profile', [\App\Http\Controllers\ProfileController::class, 'edit'])->name('profile.edit');
+    Route::patch('/profile', [\App\Http\Controllers\ProfileController::class, 'update'])->name('profile.update');
+});
+
 // Laravel Breeze authentication routes (login, registration, password reset, logout).
 if (file_exists(__DIR__.'/auth.php')) {
     require __DIR__.'/auth.php';

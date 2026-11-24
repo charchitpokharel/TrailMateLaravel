@@ -16,6 +16,7 @@
 @auth
 @if((Auth::user()->role ?? 'user') === 'admin')<a class="nav-link fw-semibold" href="{{ route('admin.dashboard') }}">Admin dashboard</a>@endif
 <a class="nav-link" href="{{ route('trails.create') }}">+ Add trail</a>
+<a class="nav-link" href="{{ route('profile.edit') }}">My Profile</a>
 <span class="navbar-text text-white-50 px-lg-2">{{ Auth::user()->name }}</span>
 <form method="POST" action="{{ route('logout') }}" class="d-inline">@csrf<button class="btn btn-sm btn-outline-light ms-lg-2 my-2 my-lg-0" type="submit">Log out</button></form>
 @else
