@@ -95,11 +95,7 @@ class TrailController extends Controller
 
     private function authorizeManage(Trail $trail): void
     {
-        $user = auth()->user();
-        abort_unless($user, 403);
-        // Admins may manage all trails; ordinary users may manage only trails they created.
-        $isAdmin = isset($user->role) && $user->role === 'admin';
-        abort_unless($isAdmin || ($trail->user_id && (int) $trail->user_id === (int) $user->id), 403);
+        abort_unless($trail->canBeManagedBy(auth()->user()), 403);
     }
 
     private function validated(Request $request): array

@@ -15,6 +15,12 @@ class Trail extends Model
 
     protected $casts = ['distance_km' => 'decimal:2'];
 
+    public function canBeManagedBy(?User $user): bool
+    {
+        return $user !== null && ($user->role === 'admin'
+            || ($this->user_id !== null && (int) $this->user_id === (int) $user->id));
+    }
+
     public function reviews(): HasMany
     {
         return $this->hasMany(Review::class);

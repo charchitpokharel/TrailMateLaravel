@@ -68,4 +68,4 @@
         </form>
     </div>
 </div>
-@endsection
+<div class="card mt-4"><div class="card-body"><h2 class="h5">Delete Account</h2><p>This permanently deletes your account.</p><form method="POST" action="{{ route('profile.destroy') }}">@csrf @method('DELETE')<label for="delete_password" class="form-label">Confirm password</label><input id="delete_password" name="password" type="password" class="form-control mb-3" required>@error('password', 'userDeletion')<p class="text-danger">{{ $message }}</p>@enderror<button class="btn btn-danger" type="submit">Delete Account</button></form></div></div>@endsection

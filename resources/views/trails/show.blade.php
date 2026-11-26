@@ -2,7 +2,7 @@
 @section('content')
 <div class="card"><div class="card-body p-4"><span class="badge text-bg-success">{{ $trail->difficulty }}</span><h1 class="mt-2">{{ $trail->name }}</h1><p class="muted">{{ $trail->location }} · {{ $trail->distance_km }} km @if($trail->user) · Added by {{ $trail->user->name }} @endif</p><p>{!! nl2br(e($trail->description)) !!}</p><div class="d-flex flex-wrap gap-2">
 @auth
-@if((isset(Auth::user()->role) && Auth::user()->role === 'admin') || ($trail->user_id && (int)$trail->user_id === (int)Auth::id()))
+@if($trail->canBeManagedBy(auth()->user()))
 <a class="btn btn-outline-secondary" href="{{ route('trails.edit', $trail) }}">Edit trail</a>
 <button type="button" class="btn btn-outline-danger" data-ajax-delete data-url="{{ route('trails.destroy', $trail) }}" data-confirm="Delete this trail and its reviews?">Delete trail</button>
 @endif

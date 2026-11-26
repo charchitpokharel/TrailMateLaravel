@@ -289,7 +289,7 @@
 
     filter.addEventListener('change', () => load(1));
 
-    load(1); // Load initial results and pagination.
+    load({{ $trails->currentPage() }});
 
 })();
 </script>

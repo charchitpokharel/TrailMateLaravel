@@ -12,6 +12,26 @@ class WeatherController extends Controller
         return view('weather');
     }
 
+    public function locations(Request $request)
+    {
+        $data = $request->validate(['q' => ['required', 'string', 'min:2', 'max:100']]);
+
+        try {
+            $response = Http::timeout(8)->connectTimeout(4)->get('https://geocoding-api.open-meteo.com/v1/search', [
+                'name' => trim($data['q']),
+                'count' => 8,
+                'language' => 'en',
+                'format' => 'json',
+            ]);
+            if (!$response->successful()) {
+                return response()->json(['error' => 'Location search is temporarily unavailable.'], 502);
+            }
+            return response()->json(['results' => $response->json('results') ?? []]);
+        } catch (\Throwable $e) {
+            return response()->json(['error' => 'Location search is temporarily unavailable.'], 502);
+        }
+    }
+
     public function forecast(Request $request)
     {
         $data = $request->validate([

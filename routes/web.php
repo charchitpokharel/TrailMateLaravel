@@ -41,6 +41,7 @@ Route::delete('/trails/{trail}', [TrailController::class, 'destroy'])->middlewar
 Route::get('/api/trails/search', [TrailController::class, 'search'])->name('api.trails.search');
 
 Route::get('/weather', [WeatherController::class, 'index'])->name('weather');
+Route::get('/api/weather/locations', [WeatherController::class, 'locations'])->middleware('throttle:30,1')->name('api.weather.locations');
 Route::get('/api/weather', [WeatherController::class, 'forecast'])->name('api.weather');
 
 Route::get('/favourites', [FavouriteController::class, 'index'])->name('favourites');
@@ -49,12 +50,8 @@ Route::post('/api/favourites/{trail}', [FavouriteController::class, 'toggle'])->
 Route::get('/reviews/{trail}', [ReviewController::class, 'index'])->name('reviews.index');
 Route::post('/api/reviews/{trail}', [ReviewController::class, 'store'])->middleware('throttle:5,1')->name('api.reviews.store');
 
-Route::middleware('auth')->group(function () {
-    Route::get('/profile', [\App\Http\Controllers\ProfileController::class, 'edit'])->name('profile.edit');
-    Route::patch('/profile', [\App\Http\Controllers\ProfileController::class, 'update'])->name('profile.update');
-});
-
 // Laravel Breeze authentication routes (login, registration, password reset, logout).
 if (file_exists(__DIR__.'/auth.php')) {
     require __DIR__.'/auth.php';
 }
+Route::middleware('auth')->group(function () { Route::get('/profile', [\App\Http\Controllers\ProfileController::class, 'edit'])->name('profile.edit'); Route::patch('/profile', [\App\Http\Controllers\ProfileController::class, 'update'])->name('profile.update'); Route::delete('/profile', [\App\Http\Controllers\ProfileController::class, 'destroy'])->name('profile.destroy'); });
